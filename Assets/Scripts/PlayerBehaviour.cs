@@ -20,4 +20,6 @@ public class PlayerBehaviour : MonoBehaviour {
         }
         transform.rotation = viewer.rotation;
     }
+
+    
 }
