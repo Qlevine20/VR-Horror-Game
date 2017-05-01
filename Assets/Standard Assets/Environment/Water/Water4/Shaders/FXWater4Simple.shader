@@ -150,7 +150,7 @@ CGINCLUDE
 
 		o.viewInterpolator.xyz = worldSpaceVertex - _WorldSpaceCameraPos;
 
-		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 
 		ComputeScreenAndGrabPassPos(o.pos, o.screenPos, o.grabPassPos);
 		
@@ -248,7 +248,7 @@ CGINCLUDE
 
 		o.viewInterpolator.xyz = worldSpaceVertex - _WorldSpaceCameraPos;
 
-		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 
 		o.screenPos = ComputeNonStereoScreenPos(o.pos);
 		
@@ -317,7 +317,7 @@ CGINCLUDE
 
 		o.viewInterpolator.xyz = worldSpaceVertex-_WorldSpaceCameraPos;
 		
-		o.pos = mul(UNITY_MATRIX_MVP,  v.vertex);
+		o.pos = UnityObjectToClipPos( v.vertex);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;

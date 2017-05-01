@@ -16,10 +16,13 @@ public class PlayerMovement : MonoBehaviour {
     private bool jump = false;
     public LayerMask layerMask;
     private bool canJump = true;
+    private PlayerBehaviour pBehav;
+
 	// Use this for initialization
 	void Start () {
         playerBehav = GameObject.Find("Player").transform;
         rb = GetComponent<Rigidbody>();
+        pBehav = GetComponentInChildren<PlayerBehaviour>();
 	}
 
     // Update is called once per frame
@@ -29,13 +32,15 @@ public class PlayerMovement : MonoBehaviour {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
+
+
         if (h != 0 || v != 0)
         {
             transform.Translate(playerBehav.right * h * Time.deltaTime * speed);
             transform.Translate(playerBehav.forward * v * Time.deltaTime * speed);
         }
 
-        if(GvrViewer.Instance.VRModeEnabled && GvrViewer.Instance.BackButtonPressed && isGrounded && canJump|| Input.GetKeyDown(KeyCode.Space) && isGrounded && canJump)
+        if(isGrounded && canJump|| Input.GetKeyDown(KeyCode.Space) && isGrounded && canJump)
         {
 
             isGrounded = false;
@@ -52,11 +57,11 @@ public class PlayerMovement : MonoBehaviour {
             isGrounded = true;
         }
 
-        if (jump)
-        {
-            jump = false;
-            rb.AddForce(new Vector3(0, 10, 0), ForceMode.Impulse);
-        }
+        //if (jump)
+        //{
+        //    jump = false;
+        //    rb.AddForce(new Vector3(0, 10, 0), ForceMode.Impulse);
+        //}
     }
 
     IEnumerator CanJumpEnumerator()
@@ -66,5 +71,28 @@ public class PlayerMovement : MonoBehaviour {
         canJump = true;
     }
 
-    
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Light")
+        {
+            pBehav.safe = true;
+            pBehav.nav.SetTarget(other.transform.FindChild("Plane").FindChild("lightTarget"));
+            pBehav.currLight = other.gameObject.transform;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Light")
+        {
+            pBehav.currLight = null;
+            pBehav.nav.SetTarget(transform);
+            pBehav.safe = false;
+        }
+
+    }
+
+
 }
